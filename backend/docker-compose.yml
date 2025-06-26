@@ -1,0 +1,22 @@
+services:
+  backend:
+    build: ./backend
+    ports:
+      - "3000:3000"
+    environment:
+      - DATABASE_URL=postgres://eijipay:eijipass@db:5432/eijipay
+    volumes:
+      - ./backend:/app
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: eijipaydb
+      POSTGRES_USER: eijipay
+      POSTGRES_PASSWORD: eijipass
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
