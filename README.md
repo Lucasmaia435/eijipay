@@ -40,6 +40,14 @@ npm install
 npm start
 ```
 
+## 📚 Documentação
+
+- [📋 Acordo de Trabalho](docs/Acordo_trabalho.md) - Horários e metodologia de trabalho
+- [🏗️ Arquitetura](docs/Arquitetura.md) - Diagramas C4 Model da arquitetura do sistema
+- [🔄 Cerimônias](docs/Cerimonias.md) - Processos e cerimônias ágeis
+- [👥 Papéis](docs/Papeis.md) - Definição de papéis e responsabilidades
+- [📅 Planejamento](docs/Planejamento.md) - Cronograma e planejamento do projeto
+
 ## 📋 Funcionalidades
 
 - Sistema de login/autenticação
@@ -51,3 +59,4 @@ npm start
 ## 👥 Desenvolvimento
 
 Projeto desenvolvido seguindo práticas ágeis com reuniões de Sprint Planning às quartas-feiras às 13h e encontros presenciais às terças e quintas na sala 35N34.
+
