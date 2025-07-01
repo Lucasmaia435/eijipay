@@ -44,3 +44,5 @@ coverage/
 # Outros
 *.tgz
 *.swp
+
+/generated/prisma

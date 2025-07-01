@@ -1,6 +1,5 @@
 import express from 'express';
 //import userRoutes from './routes/usuarioRoutes'; // Importa as rotas de usuário
-//import { usuarioService } from './services/usuarioService'; // Para desconectar o Prisma
 
 /**
  *  Responsável por configurar a aplicação Express (middlewares, rotas, etc.)
