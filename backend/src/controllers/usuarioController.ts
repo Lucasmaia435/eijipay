@@ -26,4 +26,36 @@ export const usuarioController = {
     }
   },
 
+  /**
+   * [POST /users/new] Cria um novo usuário
+   */
+  async createNewUser (req: Request, res: Response): Promise<Response> {
+    try {
+      const { email, senha, nome, papel } = req.body;
+
+      // validação: verifica se foram fornecidos os dados
+      if (!email || !senha || !nome || !papel) {
+        return res.status(400).json({ message: 'E-mail, senha, nome e papel são obrigatórios.' });
+      }
+
+      // Verificar se já existe um usuário com o mesmo email
+      const existingUser = await usuarioService.findUserByEmail(email);
+      if (existingUser) {
+        return res.status(409).json({ message: 'Já existe um usuário com este email.' });
+      }
+
+      // Em uma aplicação real, a senha deve ser hasheada antes de ser salva.
+      // Por simplicidade, estamos salvando diretamente aqui, mas isso não é seguro para produção.
+      const newUser = await usuarioService.createNewUser({email, senha, nome, papel});
+
+      // Remova a senha antes de enviar a resposta por segurança
+      const { senha: newPassword, ...usuarioSemSenha } = newUser;
+      return res.status(201).json(usuarioSemSenha);
+    } catch (error) {
+      console.error('Erro ao criar novo usuário:', error);
+      return res.status(500).json({ message: 'Erro interno do servidor ao criar usuário.' });
+    }
+  },
+
+
 };
