@@ -57,5 +57,38 @@ export const usuarioController = {
     }
   },
 
+/**
+   * [POST /users/login] Autentica um usuário.
+   */
+  async login(req: Request, res: Response): Promise<Response> {
+    try {
+      const { email, senha } = req.body;
+
+      if (!email || !senha) {
+        return res.status(400).json({ message: 'Email e senha são obrigatórios para o login.' });
+      }
+
+      const usuario = await usuarioService.findUserByEmail(email);
+
+      if (!usuario) {
+        return res.status(401).json({ message: 'Credenciais inválidas.' }); // Usuário não encontrado
+      }
+
+      // Em uma aplicação real, você compararia a senha fornecida com a senha hasheada no banco de dados.
+      // Ex: const isPasswordValid = await bcrypt.compare(senha, usuario.senha);
+      // Por simplicidade, estamos comparando diretamente aqui, o que NÃO É SEGURO para produção.
+      if (usuario.senha !== senha) {
+        return res.status(401).json({ message: 'Credenciais inválidas.' }); // Senha incorreta
+      }
+
+      // Se a autenticação for bem-sucedida, você normalmente geraria um token JWT aqui.
+      // Por simplicidade, retornamos uma mensagem de sucesso e o usuário (sem senha).
+      const { senha: userPassword, ...usuarioLogado } = usuario;
+      return res.status(200).json({ message: 'Login bem-sucedido!', usuario: usuarioLogado });
+    } catch (error) {
+      console.error('Erro durante o login:', error);
+      return res.status(500).json({ message: 'Erro interno do servidor durante o login.' });
+    }
+  },  
 
 };

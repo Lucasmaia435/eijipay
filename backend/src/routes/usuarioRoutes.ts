@@ -10,5 +10,6 @@ const router = Router();
 // Rotas para CRUD de usuários
 router.post('/new', usuarioController.createNewUser);       // POST /users/new
 router.get('/', usuarioController.getAllUsers);             // GET /users
+router.post('/login', usuarioController.login);             // POST /users/login
 
 export default router;
