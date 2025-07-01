@@ -1,5 +1,5 @@
 import express from 'express';
-//import userRoutes from './routes/usuarioRoutes'; // Importa as rotas de usuário
+import usuarioRoutes from './routes/usuarioRoutes'; // Importa as rotas de usuário
 
 /**
  *  Responsável por configurar a aplicação Express (middlewares, rotas, etc.)
@@ -11,7 +11,7 @@ const app = express();
 app.use(express.json());
 
 // Usar as rotas de usuário (montar roteadores)
-//app.use('/users', userRoutes);
+app.use('/users', usuarioRoutes);
 
 // Rota de teste
 app.get('/', (req, res) => {
