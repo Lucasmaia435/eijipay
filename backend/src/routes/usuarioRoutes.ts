@@ -12,5 +12,6 @@ router.post('/login', usuarioController.login);             // POST /users/login
 router.post('/new', usuarioController.createNewUser);       // POST /users/new
 router.get('/', usuarioController.getAllUsers);             // GET /users
 router.get('/:id', usuarioController.getUserById);          // GET /users/:id
+router.put('/update', usuarioController.updateUserByEmail); // PUT /users/update
 
 export default router;
