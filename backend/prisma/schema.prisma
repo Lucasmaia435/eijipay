@@ -19,7 +19,7 @@ model Usuario {
   senha String
   nome  String
   papel String
-funcionarios Funcionario[]
+  funcionarios Funcionario[]
    
   @@map("usuario")
 }
