@@ -1,5 +1,6 @@
-import express from 'express';
-import usuarioRoutes from './routes/usuarioRoutes'; // Importa as rotas de usuário
+import express from "express";
+import usuarioRoutes from "./routes/usuarioRoutes"; // Importa as rotas de usuário
+import funcionarioRoutes from "./routes/funcionarioRoutes";
 
 /**
  *  Responsável por configurar a aplicação Express (middlewares, rotas, etc.)
@@ -11,15 +12,17 @@ const app = express();
 app.use(express.json());
 
 // Usar as rotas de usuário (montar roteadores)
-app.use('/users', usuarioRoutes);
+app.use("/users", usuarioRoutes);
+
+app.use("/funcionarios", funcionarioRoutes);
 
 // Rota de teste
-app.get('/', (req, res) => {
-  res.send('TESTE: API de Usuários com Prisma ORM e Express!');
+app.get("/", (req, res) => {
+  res.send("TESTE: API de Usuários com Prisma ORM e Express!");
 });
 
 // Mensagem mais específica para o que este arquivo faz
-console.log('Aplicação Express configurada.');
+console.log("Aplicação Express configurada.");
 
 // Exporta a instância 'app' como a exportação padrão do módulo
 export default app;
