@@ -55,7 +55,16 @@ export const usuarioService = {
       data,
     });
   },
-  
+
+  /**
+   * Remove um usuário pelo email.
+   */
+  async deleteUserByEmail(email: string) {
+    return prisma.usuario.delete({
+      where: { email },
+    });
+  },
+
   /**
    * Desconecta o Prisma Client (útil para encerramento da aplicação ou testes).
    */
