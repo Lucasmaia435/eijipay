@@ -19,6 +19,21 @@ model Usuario {
   senha String
   nome  String
   papel String
-
+funcionarios Funcionario[]
+   
   @@map("usuario")
+}
+
+model Funcionario {
+  id             Int      @id @default(autoincrement())
+  nome           String
+  sobrenome      String
+  cargo          String
+  cpf            String   @unique
+  data_admissao  DateTime
+  usuario_id     Int
+
+  usuario        Usuario  @relation(fields: [usuario_id], references: [id])
+
+  @@map("funcionario")
 }
