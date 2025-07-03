@@ -26,8 +26,8 @@ jobs:
 
       - name: Build e Push da imagem
         run: |
-          docker build -t ${{ secrets.DOCKER_USER }}/eijipay-backend:latest ./backend
-          docker push ${{ secrets.DOCKER_USER }}/eijipay-backend:latest
+          docker build -t ${{ secrets.DOCKER_USER }}/eijipay:latest ./backend
+          docker push ${{ secrets.DOCKER_USER }}/eijipay:latest
 
   deploy:
     name: Deploy remoto
@@ -36,7 +36,7 @@ jobs:
 
     steps:
       - name: Deploy via SSH
-        uses: # Falta implementar o deploy via instância EC2 AWS
+        uses: appleboy/ssh-action@v1.0.0
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
