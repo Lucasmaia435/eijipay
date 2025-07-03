@@ -4,20 +4,5 @@ services:
     ports:
       - "80:3000"
     environment:
-      - DATABASE_URL=postgres://eijipay:eijipass@db:5332/eijipaydb
-    depends_on:
-      - db
+      - DATABASE_URL="prisma+postgres://accelerate.prisma-data.net/?api_key=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcGlfa2V5IjoiMDFKWjNTM0RCOFlKSjQ2M1lFMFRNTVhKVFIiLCJ0ZW5hbnRfaWQiOiJhMTg5ODM3OWNhMzBiYzExZjAwODYzMjQzZmQxNzZlZjY1MjhkN2M0N2YyNDRmYTdhYzRmYWMxNTRkMzhjYzc0IiwiaW50ZXJuYWxfc2VjcmV0IjoiNTM5YjM2MmUtN2JlYi00NjBiLWIxNTItOTk0YjU5ODFlMjE1In0.xJwEmIj0fnepadetDw-GpPJDxcxW3w7dknxxC9IuyUQ"
     restart: always
-
-  db:
-    image: postgres:15
-    environment:
-      POSTGRES_DB: eijipaydb
-      POSTGRES_USER: eijipay
-      POSTGRES_PASSWORD: eijipass
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    restart: always
-
-volumes:
-  postgres_data:
