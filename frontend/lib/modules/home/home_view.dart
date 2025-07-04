@@ -23,8 +23,8 @@ class _HomeViewState extends State<HomeView> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Header do sistema
-              // _buildHeader(),
-              // const SizedBox(height: 32),
+              _buildHeader(),
+              const SizedBox(height: 32),
 
               // Três módulos principais
               _buildMainModules(),
