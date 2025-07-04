@@ -31,14 +31,14 @@ class _HomeViewState extends State<HomeView> {
               const SizedBox(height: 32),
 
               // Dashboard com informações essenciais
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(flex: 2, child: _buildPayrollOverview()),
-                  const SizedBox(width: 24),
-                  Expanded(flex: 1, child: _buildQuickStats()),
-                ],
-              ),
+              // Row(
+              //   crossAxisAlignment: CrossAxisAlignment.start,
+              //   children: [
+              //     Expanded(flex: 2, child: _buildPayrollOverview()),
+              //     const SizedBox(width: 24),
+              //     Expanded(flex: 1, child: _buildQuickStats()),
+              //   ],
+              // ),
             ],
           ),
         ),
