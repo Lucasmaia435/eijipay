@@ -3,6 +3,6 @@ import { postFuncionario } from "../controllers/funcionarioController";
 
 const router = express.Router();
 
-router.post("/funcionarios/new", postFuncionario);
+router.post("/new", postFuncionario);
 
 export default router;
