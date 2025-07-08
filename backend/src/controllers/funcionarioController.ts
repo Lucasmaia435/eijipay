@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { criarFuncionario } from "../services/funcionarioService";
 import { buscarFuncionarioPorId } from "../services/funcionarioService";
 import { atualizarFuncionario } from "../services/funcionarioService";
+import { deletarFuncionario } from "../services/funcionarioService";
 
 export const postFuncionario = async (req: Request, res: Response) => {
   try {
@@ -74,5 +75,24 @@ export const putFuncionario = async (req: Request, res: Response) => {
     }
     console.error(error);
     return res.status(500).json({ error: "Erro ao atualizar funcionário." });
+  }
+};
+
+export const deleteFuncionario = async (req: Request, res: Response) => {
+  const id = Number(req.params.id);
+
+  if (isNaN(id)) {
+    return res.status(400).json({ error: "ID inválido." });
+  }
+
+  try {
+    await deletarFuncionario(id);
+    return res.sendStatus(204); // Sucesso: sem conteúdo
+  } catch (error: any) {
+    if (error.code === "P2025") {
+      return res.status(404).json({ error: "Funcionário não encontrado." });
+    }
+    console.error(error);
+    return res.status(500).json({ error: "Erro ao deletar funcionário." });
   }
 };
