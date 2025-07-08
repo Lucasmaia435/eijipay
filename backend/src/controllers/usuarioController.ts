@@ -7,6 +7,7 @@ import { Request, Response } from 'express';
 import { usuarioService } from '../services/usuarioService'; // Importa o serviço de usuário
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
+import md5 from 'md5';  // Importa a função MD5
 
 const SECRET_KEY = process.env.JWT_SECRET || 'chave-secreta-padrao';
 
@@ -64,7 +65,7 @@ export const usuarioController = {
     try {
       const { email, senha, nome, papel } = req.body;
 
-      // validação: verifica se foram fornecidos os dados
+      // Verificação dos dados fornecidos
       if (!email || !senha || !nome || !papel) {
         return res.status(400).json({ message: 'E-mail, senha, nome e papel são obrigatórios.' });
       }
@@ -75,11 +76,16 @@ export const usuarioController = {
         return res.status(409).json({ message: 'Já existe um usuário com este email.' });
       }
 
-      // Em uma aplicação real, a senha deve ser hasheada antes de ser salva.
-      // Por simplicidade, estamos salvando diretamente aqui, mas isso não é seguro para produção.
-      const newUser = await usuarioService.createNewUser({ email, senha, nome, papel });
+      // **Primeiro**, geramos o hash MD5 da senha
+      const senhaMD5 = md5(senha);  // Aplica MD5 à senha
 
-      // Remova a senha antes de enviar a resposta por segurança
+      // **Em seguida**, gera o hash bcrypt da senha MD5 para maior segurança
+      const hashedPassword = await bcrypt.hash(senhaMD5, 8);  // Salva o hash bcrypt da senha MD5
+
+      // Criação do usuário com a senha hasheada com bcrypt
+      const newUser = await usuarioService.createNewUser({ email, senha: hashedPassword, nome, papel });
+
+      // Remova a senha antes de enviar a resposta
       const { senha: newPassword, ...usuarioSemSenha } = newUser;
       return res.status(201).json(usuarioSemSenha);
     } catch (error) {
@@ -89,8 +95,8 @@ export const usuarioController = {
   },
 
   /**
-     * [POST /users/login] Autentica um usuário.
-     */
+   * [POST /users/login] Autentica um usuário.
+   */
   async login(req: Request, res: Response): Promise<Response> {
     try {
       const { email, senha } = req.body;
@@ -101,20 +107,19 @@ export const usuarioController = {
 
       const usuario = await usuarioService.findUserByEmail(email);
       if (!usuario) {
-        return res.status(401).json({ message: 'Credenciais inválidas.' }); // Usuário não encontrado
+        return res.status(401).json({ message: 'Credenciais inválidas.' });
       }
 
-      const isPasswordValid = await bcrypt.compare(senha, usuario.senha);
+      // **Primeiro**, aplica o MD5 na senha fornecida pelo usuário
+      const senhaMD5 = md5(senha);
+
+      // **Depois**, compara com o hash bcrypt da senha
+      const isPasswordValid = await bcrypt.compare(senhaMD5, usuario.senha);
       if (!isPasswordValid) {
         return res.status(401).json({ message: 'Credenciais inválidas.' });
       }
-      // Em uma aplicação real, você compararia a senha fornecida com a senha hasheada no banco de dados.
-      // Ex: const isPasswordValid = await bcrypt.compare(senha, usuario.senha);
-      // Por simplicidade, estamos comparando diretamente aqui, o que NÃO É SEGURO para produção.
-      // if (usuario.senha !== senha) {
-      //   return res.status(401).json({ message: 'Credenciais inválidas.' }); // Senha incorreta
-      // }
 
+      // Geração do token JWT
       const token = jwt.sign(
         { id: usuario.id, email: usuario.email, papel: usuario.papel },
         SECRET_KEY,
@@ -127,11 +132,6 @@ export const usuarioController = {
         token,
         usuario: usuarioSemSenha,
       });
-
-      // Se a autenticação for bem-sucedida, você normalmente geraria um token JWT aqui.
-      // Por simplicidade, retornamos uma mensagem de sucesso e o usuário (sem senha).
-      // const { senha: userPassword, ...usuarioLogado } = usuario;
-      // return res.status(200).json({ message: 'Login bem-sucedido!', usuario: usuarioLogado });
     } catch (error) {
       console.error('Erro durante o login:', error);
       return res.status(500).json({ message: 'Erro interno do servidor durante o login.' });
