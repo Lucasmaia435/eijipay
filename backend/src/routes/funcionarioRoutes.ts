@@ -6,7 +6,7 @@ import { deleteFuncionario } from "../controllers/funcionarioController";
 import { getFuncionariosPorUsuario } from "../controllers/funcionarioController";
 
 const router = express.Router();
-
+//todos os funcinarios de um usuario
 router.get("/", getFuncionariosPorUsuario);
 
 router.post("/new", postFuncionario);
