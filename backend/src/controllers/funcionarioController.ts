@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import { listarFuncionariosPorUsuario } from "../services/funcionarioService";
 import { criarFuncionario } from "../services/funcionarioService";
 import { buscarFuncionarioPorId } from "../services/funcionarioService";
 import { atualizarFuncionario } from "../services/funcionarioService";
@@ -94,5 +95,28 @@ export const deleteFuncionario = async (req: Request, res: Response) => {
     }
     console.error(error);
     return res.status(500).json({ error: "Erro ao deletar funcionário." });
+  }
+};
+
+export const getFuncionariosPorUsuario = async (
+  req: Request,
+  res: Response
+) => {
+  const usuarioId = Number(req.query.usuarioId); // obtém via query string
+
+  if (isNaN(usuarioId)) {
+    return res
+      .status(400)
+      .json({
+        error: "Parâmetro 'usuarioId' é obrigatório e deve ser numérico.",
+      });
+  }
+
+  try {
+    const funcionarios = await listarFuncionariosPorUsuario(usuarioId);
+    return res.status(200).json(funcionarios); // retorna [] se não houver
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Erro ao buscar funcionários." });
   }
 };
