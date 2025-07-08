@@ -1,6 +1,14 @@
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
+export const listarFuncionariosPorUsuario = async (usuarioId: number) => {
+  return await prisma.funcionario.findMany({
+    where: {
+      usuario_id: usuarioId,
+    },
+  });
+};
+
 export const criarFuncionario = async (dados: {
   nome: string;
   sobrenome: string;
