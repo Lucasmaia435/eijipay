@@ -19,3 +19,19 @@ export const buscarFuncionarioPorId = async (id: number) => {
     where: { id },
   });
 };
+
+export const atualizarFuncionario = async (
+  id: number,
+  dados: {
+    nome?: string;
+    sobrenome?: string;
+    cpf?: string;
+    cargo?: string;
+    data_admissao?: Date;
+  }
+) => {
+  return await prisma.funcionario.update({
+    where: { id },
+    data: dados,
+  });
+};
