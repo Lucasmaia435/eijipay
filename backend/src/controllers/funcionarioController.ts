@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { criarFuncionario } from "../services/funcionarioService";
+import { buscarFuncionarioPorId } from "../services/funcionarioService";
 
 export const postFuncionario = async (req: Request, res: Response) => {
   try {
@@ -30,4 +31,20 @@ export const postFuncionario = async (req: Request, res: Response) => {
     console.error(error);
     return res.status(500).json({ error: "Erro ao criar funcionário." });
   }
+};
+
+export const getFuncionarioPorId = async (req: Request, res: Response) => {
+  const id = Number(req.params.id);
+
+  if (isNaN(id)) {
+    return res.status(400).json({ error: "ID inválido." });
+  }
+
+  const funcionario = await buscarFuncionarioPorId(id);
+
+  if (!funcionario) {
+    return res.status(404).json({ error: "Funcionário não encontrado." });
+  }
+
+  return res.status(200).json(funcionario);
 };
