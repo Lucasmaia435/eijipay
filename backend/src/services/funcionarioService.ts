@@ -35,3 +35,9 @@ export const atualizarFuncionario = async (
     data: dados,
   });
 };
+
+export const deletarFuncionario = async (id: number) => {
+  return await prisma.funcionario.delete({
+    where: { id },
+  });
+};
