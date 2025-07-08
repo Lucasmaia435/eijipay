@@ -1,5 +1,7 @@
 import express from 'express';
 import usuarioRoutes from './routes/usuarioRoutes'; // Importa as rotas de usuário
+import dotenv from 'dotenv';
+dotenv.config(); // Carrega as variáveis de ambiente do arquivo .env
 
 /**
  *  Responsável por configurar a aplicação Express (middlewares, rotas, etc.)

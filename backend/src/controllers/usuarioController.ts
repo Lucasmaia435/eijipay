@@ -5,6 +5,10 @@
  */
 import { Request, Response } from 'express';
 import { usuarioService } from '../services/usuarioService'; // Importa o serviço de usuário
+import jwt from 'jsonwebtoken';
+import bcrypt from 'bcryptjs';
+
+const SECRET_KEY = process.env.JWT_SECRET || 'chave-secreta-padrao';
 
 export const usuarioController = {
 
@@ -52,11 +56,11 @@ export const usuarioController = {
       return res.status(500).json({ message: 'Erro interno do servidor ao buscar usuário.' });
     }
   },
-  
+
   /**
    * [POST /users/new] Cria um novo usuário
    */
-  async createNewUser (req: Request, res: Response): Promise<Response> {
+  async createNewUser(req: Request, res: Response): Promise<Response> {
     try {
       const { email, senha, nome, papel } = req.body;
 
@@ -73,7 +77,7 @@ export const usuarioController = {
 
       // Em uma aplicação real, a senha deve ser hasheada antes de ser salva.
       // Por simplicidade, estamos salvando diretamente aqui, mas isso não é seguro para produção.
-      const newUser = await usuarioService.createNewUser({email, senha, nome, papel});
+      const newUser = await usuarioService.createNewUser({ email, senha, nome, papel });
 
       // Remova a senha antes de enviar a resposta por segurança
       const { senha: newPassword, ...usuarioSemSenha } = newUser;
@@ -84,9 +88,9 @@ export const usuarioController = {
     }
   },
 
-/**
-   * [POST /users/login] Autentica um usuário.
-   */
+  /**
+     * [POST /users/login] Autentica um usuário.
+     */
   async login(req: Request, res: Response): Promise<Response> {
     try {
       const { email, senha } = req.body;
@@ -96,26 +100,41 @@ export const usuarioController = {
       }
 
       const usuario = await usuarioService.findUserByEmail(email);
-
       if (!usuario) {
         return res.status(401).json({ message: 'Credenciais inválidas.' }); // Usuário não encontrado
       }
 
+      const isPasswordValid = await bcrypt.compare(senha, usuario.senha);
+      if (!isPasswordValid) {
+        return res.status(401).json({ message: 'Credenciais inválidas.' });
+      }
       // Em uma aplicação real, você compararia a senha fornecida com a senha hasheada no banco de dados.
       // Ex: const isPasswordValid = await bcrypt.compare(senha, usuario.senha);
       // Por simplicidade, estamos comparando diretamente aqui, o que NÃO É SEGURO para produção.
-      if (usuario.senha !== senha) {
-        return res.status(401).json({ message: 'Credenciais inválidas.' }); // Senha incorreta
-      }
+      // if (usuario.senha !== senha) {
+      //   return res.status(401).json({ message: 'Credenciais inválidas.' }); // Senha incorreta
+      // }
+
+      const token = jwt.sign(
+        { id: usuario.id, email: usuario.email, papel: usuario.papel },
+        SECRET_KEY,
+        { expiresIn: '1h' }
+      );
+
+      const { senha: _, ...usuarioSemSenha } = usuario;
+      return res.status(200).json({
+        message: 'Login bem-sucedido!',
+        token,
+        usuario: usuarioSemSenha,
+      });
 
       // Se a autenticação for bem-sucedida, você normalmente geraria um token JWT aqui.
       // Por simplicidade, retornamos uma mensagem de sucesso e o usuário (sem senha).
-      const { senha: userPassword, ...usuarioLogado } = usuario;
-      return res.status(200).json({ message: 'Login bem-sucedido!', usuario: usuarioLogado });
+      // const { senha: userPassword, ...usuarioLogado } = usuario;
+      // return res.status(200).json({ message: 'Login bem-sucedido!', usuario: usuarioLogado });
     } catch (error) {
       console.error('Erro durante o login:', error);
       return res.status(500).json({ message: 'Erro interno do servidor durante o login.' });
     }
-  },  
-
+  },
 };
