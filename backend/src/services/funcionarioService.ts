@@ -13,3 +13,9 @@ export const criarFuncionario = async (dados: {
     data: dados,
   });
 };
+
+export const buscarFuncionarioPorId = async (id: number) => {
+  return await prisma.funcionario.findUnique({
+    where: { id },
+  });
+};
