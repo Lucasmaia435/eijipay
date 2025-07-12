@@ -11,7 +11,15 @@ API backend desenvolvido como parte do curso de Processos de Software da UFRN.
 - Banco de Dados Prisma Postgre (online)
 - Prisma Data Platform
 
-# 🛠️ Executar a API
+# 🛠️ Antes de executar a API
+1. Criar um arquivo "backend/.env" na pasta **backend**
+2. Adicionar a chave URL/Api Key no arquivo **.env**
+3. No terminal: instalar as dependências: **npm install**
+4. Executar a API conforme abaixo
+5. No terminal: visualizar/manipular o banco de dados (caso deseje):
+   - **npx prisma studio** ou via navegador
+
+# 📦 Executar a API
 
 ## Rodar em desenvolvimento
 

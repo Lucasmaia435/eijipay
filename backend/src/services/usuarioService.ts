@@ -49,7 +49,27 @@ export const usuarioService = {
   async getAllUsers() {
     return prisma.usuario.findMany();
   },
-  
+
+  /**
+   * Atualiza os dados de um usuário pelo email.
+   */
+  async updateUserByEmail(userData: {email: string, senha?: string, nome?: string, papel?: string}) {
+    const { email, ...data } = userData;
+    return prisma.usuario.update({
+      where: { email },
+      data,
+    });
+  },
+
+  /**
+   * Remove um usuário pelo email.
+   */
+  async deleteUserByEmail(email: string) {
+    return prisma.usuario.delete({
+      where: { email },
+    });
+  },
+
   /**
    * Desconecta o Prisma Client (útil para encerramento da aplicação ou testes).
    */

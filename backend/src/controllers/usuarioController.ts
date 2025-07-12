@@ -136,4 +136,66 @@ export const usuarioController = {
       return res.status(500).json({ message: 'Erro interno do servidor durante o login.' });
     }
   },
+
+  /**
+   * [PUT /users/update] Altera os dados de um usuário pelo email.
+   */
+  async updateUserByEmail(req: Request, res: Response): Promise<Response> {
+    try {
+      const { email, senha, nome, papel } = req.body;
+
+      if (!email) {
+        return res.status(400).json({ message: 'O campo email é obrigatório para atualização.' });
+      }
+
+      // Verifica se o usuário existe antes de tentar atualizar
+      const usuarioExistente = await usuarioService.findUserByEmail(email);
+      if (!usuarioExistente) {
+        return res.status(404).json({ message: 'Usuário não encontrado.' });
+      }
+
+      // Verifica se pelo menos um campo foi enviado para atualização (exceto email)
+      if (!senha && !nome && !papel) {
+        return res.status(400).json({ message: 'Informe ao menos um campo para atualizar.' });
+      }
+
+      const usuarioAtualizado = await usuarioService.updateUserByEmail({
+        email,
+        senha,
+        nome,
+        papel,
+      });
+
+      // Remove a senha antes de enviar a resposta
+      const { senha: _, ...usuarioSemSenha } = usuarioAtualizado;
+      return res.status(200).json(usuarioSemSenha);
+    } catch (error) {
+      console.error('Erro ao atualizar usuário:', error);
+      return res.status(500).json({ message: 'Erro interno do servidor ao atualizar usuário.' });
+    }
+  },
+
+  /**
+   * [DELETE /users/delete] Remove um usuário pelo email.
+   */
+  async deleteUserByEmail(req: Request, res: Response): Promise<Response> {
+    try {
+      const { email } = req.body;
+
+      if (!email) {
+        return res.status(400).json({ message: 'O campo email é obrigatório para exclusão.' });
+      }
+
+      const usuarioExistente = await usuarioService.findUserByEmail(email);
+      if (!usuarioExistente) {
+        return res.status(404).json({ message: 'Usuário não encontrado.' });
+      }
+
+      await usuarioService.deleteUserByEmail(email);
+      return res.status(200).json({ message: 'Usuário excluído com sucesso.' });
+    } catch (error) {
+      console.error('Erro ao excluir usuário:', error);
+      return res.status(500).json({ message: 'Erro interno do servidor ao excluir usuário.' });
+    }
+  },
 };
