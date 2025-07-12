@@ -46,5 +46,3 @@ coverage/
 *.swp
 
 /generated/prisma
-
-/backend/node_modules

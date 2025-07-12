@@ -7,7 +7,6 @@ import { Request, Response } from 'express';
 import { usuarioService } from '../services/usuarioService'; // Importa o serviço de usuário
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
-import md5 from 'md5';  // Importa a função MD5
 
 const SECRET_KEY = process.env.JWT_SECRET || 'chave-secreta-padrao';
 
@@ -76,14 +75,10 @@ export const usuarioController = {
         return res.status(409).json({ message: 'Já existe um usuário com este email.' });
       }
 
-      // **Primeiro**, geramos o hash MD5 da senha
-      const senhaMD5 = md5(senha);  // Aplica MD5 à senha
-
-      // **Em seguida**, gera o hash bcrypt da senha MD5 para maior segurança
-      const hashedPassword = await bcrypt.hash(senhaMD5, 8);  // Salva o hash bcrypt da senha MD5
+      // const hashedPassword = await bcrypt.hash(senha, 8);  // Salva o hash bcrypt 
 
       // Criação do usuário com a senha hasheada com bcrypt
-      const newUser = await usuarioService.createNewUser({ email, senha: hashedPassword, nome, papel });
+      const newUser = await usuarioService.createNewUser({ email, senha, nome, papel });
 
       // Remova a senha antes de enviar a resposta
       const { senha: newPassword, ...usuarioSemSenha } = newUser;
@@ -101,22 +96,24 @@ export const usuarioController = {
     try {
       const { email, senha } = req.body;
 
+      console.log(`[LOGIN] Tentativa de login para o email: ${email}`);
+
       if (!email || !senha) {
+        console.warn('[LOGIN] Email ou senha não fornecidos.');
         return res.status(400).json({ message: 'Email e senha são obrigatórios para o login.' });
       }
 
       const usuario = await usuarioService.findUserByEmail(email);
       if (!usuario) {
+        console.warn(`[LOGIN] Usuário não encontrado para o email: ${email}`);
         return res.status(401).json({ message: 'Credenciais inválidas.' });
       }
 
-      // **Primeiro**, aplica o MD5 na senha fornecida pelo usuário
-      const senhaMD5 = md5(senha);
-
       // **Depois**, compara com o hash bcrypt da senha
-      const isPasswordValid = await bcrypt.compare(senhaMD5, usuario.senha);
+      const isPasswordValid = await bcrypt.compare(senha, usuario.senha);
       if (!isPasswordValid) {
-        return res.status(401).json({ message: 'Credenciais inválidas.' });
+        console.warn(`[LOGIN] Senha inválida para o email: ${email}`);
+        return res.status(401).json({ message: 'Creden inválidas.' });
       }
 
       // Geração do token JWT
@@ -125,6 +122,8 @@ export const usuarioController = {
         SECRET_KEY,
         { expiresIn: '1h' }
       );
+
+      console.log(`[LOGIN] Login bem-sucedido para o email: ${email}`);
 
       const { senha: _, ...usuarioSemSenha } = usuario;
       return res.status(200).json({
