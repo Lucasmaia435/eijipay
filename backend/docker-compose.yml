@@ -4,6 +4,6 @@ services:
     ports:
       - "3000:3000"
     environment:
-      - DATABASE_URL="prisma+postgres://accelerate.prisma-data.net/?api_key=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcGlfa2V5IjoiMDFKWjNTM0RCOFlKSjQ2M1lFMFRNTVhKVFIiLCJ0ZW5hbnRfaWQiOiJhMTg5ODM3OWNhMzBiYzExZjAwODYzMjQzZmQxNzZlZjY1MjhkN2M0N2YyNDRmYTdhYzRmYWMxNTRkMzhjYzc0IiwiaW50ZXJuYWxfc2VjcmV0IjoiNTM5YjM2MmUtN2JlYi00NjBiLWIxNTItOTk0YjU5ODFlMjE1In0.xJwEmIj0fnepadetDw-GpPJDxcxW3w7dknxxC9IuyUQ"
+      - DATABASE_URL=${DATABASE_URL}
     volumes:
       - ./backend:/app
