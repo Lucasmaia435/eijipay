@@ -41,5 +41,6 @@ jobs:
             set -e
             cd ~/eijipay
             git pull origin main
+            export DATABASE_URL=${{ secrets.DATABASE_URL }}
             docker compose -f ./backend/docker-compose.prod.yml pull
             docker compose -f ./backend/docker-compose.prod.yml up -d --remove-orphans
