@@ -40,5 +40,5 @@ jobs:
             set -e
             cd ~/eijipay
             git pull origin main
-            docker compose -f docker-compose.prod.yml pull
-            docker compose -f docker-compose.prod.yml up -d --remove-orphans
+            docker compose -f ./backend/docker-compose.prod.yml pull
+            docker compose -f ./backend/docker-compose.prod.yml up -d --remove-orphans
