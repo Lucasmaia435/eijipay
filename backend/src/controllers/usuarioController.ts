@@ -15,7 +15,7 @@ export const usuarioController = {
     try {
       const usuarios = await usuarioService.getAllUsers();
       // Remova a senha de cada usuário antes de enviar a resposta
-      const usuariosSemSenha = usuarios.map(usuario => {
+      const usuariosSemSenha = usuarios.map((usuario: any) => {
         const { senha, ...usuarioSemSenha } = usuario;
         return usuarioSemSenha;
       });
