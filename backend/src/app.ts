@@ -1,6 +1,8 @@
-import express from "express";
-import usuarioRoutes from "./routes/usuarioRoutes"; // Importa as rotas de usuário
+import express from 'express';
+import usuarioRoutes from './routes/usuarioRoutes'; // Importa as rotas de usuário
 import funcionarioRoutes from "./routes/funcionarioRoutes";
+import dotenv from 'dotenv';
+dotenv.config(); // Carrega as variáveis de ambiente do arquivo .env
 
 /**
  *  Responsável por configurar a aplicação Express (middlewares, rotas, etc.)

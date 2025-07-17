@@ -5,6 +5,7 @@
  */
 import { PrismaClient } from '@prisma/client'              // Importação padrão do PrismaClient
 import { withAccelerate } from '@prisma/extension-accelerate'
+import bcrypt from 'bcryptjs' // Importação do bcrypt para hash de senhas
 
 // Instancia o Prisma Client, passando a extensão Accelerate
 const prisma = new PrismaClient().$extends(withAccelerate());
@@ -33,8 +34,12 @@ export const usuarioService = {
    * Cria um novo usuário.
    */
   async createNewUser(userData: {email: string, senha: string, nome:  string, papel: string}) {
+    const hashedPassword = await bcrypt.hash(userData.senha, 8); // Hash da senha
     return prisma.usuario.create({
-      data: userData,
+      data: {
+        ...userData,
+        senha: hashedPassword, // Armazena a senha hasheada
+      },
     });
   },
 

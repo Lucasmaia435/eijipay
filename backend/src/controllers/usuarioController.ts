@@ -5,6 +5,10 @@
  */
 import { Request, Response } from 'express';
 import { usuarioService } from '../services/usuarioService'; // Importa o serviço de usuário
+import jwt from 'jsonwebtoken';
+import bcrypt from 'bcryptjs';
+
+const SECRET_KEY = process.env.JWT_SECRET || 'chave-secreta-padrao';
 
 export const usuarioController = {
 
@@ -52,15 +56,15 @@ export const usuarioController = {
       return res.status(500).json({ message: 'Erro interno do servidor ao buscar usuário.' });
     }
   },
-  
+
   /**
    * [POST /users/new] Cria um novo usuário
    */
-  async createNewUser (req: Request, res: Response): Promise<Response> {
+  async createNewUser(req: Request, res: Response): Promise<Response> {
     try {
       const { email, senha, nome, papel } = req.body;
 
-      // validação: verifica se foram fornecidos os dados
+      // Verificação dos dados fornecidos
       if (!email || !senha || !nome || !papel) {
         return res.status(400).json({ message: 'E-mail, senha, nome e papel são obrigatórios.' });
       }
@@ -71,11 +75,12 @@ export const usuarioController = {
         return res.status(409).json({ message: 'Já existe um usuário com este email.' });
       }
 
-      // Em uma aplicação real, a senha deve ser hasheada antes de ser salva.
-      // Por simplicidade, estamos salvando diretamente aqui, mas isso não é seguro para produção.
-      const newUser = await usuarioService.createNewUser({email, senha, nome, papel});
+      // const hashedPassword = await bcrypt.hash(senha, 8);  // Salva o hash bcrypt 
 
-      // Remova a senha antes de enviar a resposta por segurança
+      // Criação do usuário com a senha hasheada com bcrypt
+      const newUser = await usuarioService.createNewUser({ email, senha, nome, papel });
+
+      // Remova a senha antes de enviar a resposta
       const { senha: newPassword, ...usuarioSemSenha } = newUser;
       return res.status(201).json(usuarioSemSenha);
     } catch (error) {
@@ -84,34 +89,48 @@ export const usuarioController = {
     }
   },
 
-/**
+  /**
    * [POST /users/login] Autentica um usuário.
    */
   async login(req: Request, res: Response): Promise<Response> {
     try {
       const { email, senha } = req.body;
 
+      console.log(`[LOGIN] Tentativa de login para o email: ${email}`);
+
       if (!email || !senha) {
+        console.warn('[LOGIN] Email ou senha não fornecidos.');
         return res.status(400).json({ message: 'Email e senha são obrigatórios para o login.' });
       }
 
       const usuario = await usuarioService.findUserByEmail(email);
-
       if (!usuario) {
-        return res.status(401).json({ message: 'Credenciais inválidas.' }); // Usuário não encontrado
+        console.warn(`[LOGIN] Usuário não encontrado para o email: ${email}`);
+        return res.status(401).json({ message: 'Credenciais inválidas.' });
       }
 
-      // Em uma aplicação real, você compararia a senha fornecida com a senha hasheada no banco de dados.
-      // Ex: const isPasswordValid = await bcrypt.compare(senha, usuario.senha);
-      // Por simplicidade, estamos comparando diretamente aqui, o que NÃO É SEGURO para produção.
-      if (usuario.senha !== senha) {
-        return res.status(401).json({ message: 'Credenciais inválidas.' }); // Senha incorreta
+      // **Depois**, compara com o hash bcrypt da senha
+      const isPasswordValid = await bcrypt.compare(senha, usuario.senha);
+      if (!isPasswordValid) {
+        console.warn(`[LOGIN] Senha inválida para o email: ${email}`);
+        return res.status(401).json({ message: 'Creden inválidas.' });
       }
 
-      // Se a autenticação for bem-sucedida, você normalmente geraria um token JWT aqui.
-      // Por simplicidade, retornamos uma mensagem de sucesso e o usuário (sem senha).
-      const { senha: userPassword, ...usuarioLogado } = usuario;
-      return res.status(200).json({ message: 'Login bem-sucedido!', usuario: usuarioLogado });
+      // Geração do token JWT
+      const token = jwt.sign(
+        { id: usuario.id, email: usuario.email, papel: usuario.papel },
+        SECRET_KEY,
+        { expiresIn: '1h' }
+      );
+
+      console.log(`[LOGIN] Login bem-sucedido para o email: ${email}`);
+
+      const { senha: _, ...usuarioSemSenha } = usuario;
+      return res.status(200).json({
+        message: 'Login bem-sucedido!',
+        token,
+        usuario: usuarioSemSenha,
+      });
     } catch (error) {
       console.error('Erro durante o login:', error);
       return res.status(500).json({ message: 'Erro interno do servidor durante o login.' });
@@ -179,5 +198,4 @@ export const usuarioController = {
       return res.status(500).json({ message: 'Erro interno do servidor ao excluir usuário.' });
     }
   },
-
 };
