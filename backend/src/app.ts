@@ -1,7 +1,8 @@
-import express from 'express';
-import usuarioRoutes from './routes/usuarioRoutes'; // Importa as rotas de usuário
+import express from "express";
+import usuarioRoutes from "./routes/usuarioRoutes"; // Importa as rotas de usuário
 import funcionarioRoutes from "./routes/funcionarioRoutes";
-import dotenv from 'dotenv';
+import empregadorRoutes from "./routes/empregadorRoutes";
+import dotenv from "dotenv";
 dotenv.config(); // Carrega as variáveis de ambiente do arquivo .env
 
 /**
@@ -22,6 +23,7 @@ app.use("/funcionarios", funcionarioRoutes);
 app.get("/", (req, res) => {
   res.send("TESTE: API de Usuários com Prisma ORM e Express!");
 });
+app.use("/empregador", empregadorRoutes);
 
 // Mensagem mais específica para o que este arquivo faz
 console.log("Aplicação Express configurada.");
