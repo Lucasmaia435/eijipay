@@ -10,7 +10,7 @@
  * Module dependencies.
  */
 import 'dotenv/config';         // Carrega as variáveis de ambiente antes da aplicação rodar
-import app from '../src/app';   // Importa a instância do Express configurada
+import app from '../app';   // Importa a instância do Express configurada
 import debug from 'debug';
 import http from 'http';
 
@@ -20,7 +20,7 @@ import http from 'http';
  */
 
 // Importa o serviço de usuário para desconectar o Prisma Client durante o desligamento
-import { usuarioService } from '../src/services/usuarioService';
+import { usuarioService } from '../services/usuarioService';
 
 const debugServer = debug('test-node-express:server');
 
