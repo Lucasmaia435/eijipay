@@ -34,3 +34,10 @@ model Funcionario {
 
   @@map("funcionario")
 }
+
+model Empregador {
+  cnpj         String   @id @unique @db.Char(14)
+  razao_social String
+
+  @@map("empregador")
+}
