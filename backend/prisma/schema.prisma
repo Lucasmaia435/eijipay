@@ -8,9 +8,14 @@ generator client {
   provider = "prisma-client-js"
 }
 
+// datasource db {
+//   provider = "postgresql"
+//   url      = env("DATABASE_URL")
+// }
+
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider = "sqlite"
+  url      = "file:./dev.db"
 }
 
 model Usuario {
@@ -37,7 +42,7 @@ model Funcionario {
   nome          String
   sobrenome     String
   cargo         String
-  cpf           String   @unique @db.Char(11)
+  cpf           String   @unique 
   data_admissao DateTime
   matricula     Int      @unique
 
@@ -99,7 +104,7 @@ model ItemRecibo {
 }
 
 model Empregador {
-  cnpj         String @id @unique @db.Char(14)
+  cnpj         String @id @unique 
   razao_social String
 
   funcionarios    Funcionario[]
@@ -107,3 +112,14 @@ model Empregador {
 
   @@map("empregador")
 }
+
+// model Lotacao {
+//   codigo Int     @id @default(autoincrement())
+//   nome   String
+
+//   // Relacionamento com FuncionarioLotacao
+//   funcionarios FuncionarioLotacao[]
+
+//   // Relacionamento com Usuario (controle de lotações)
+//   usuarios     LotacaoUsuario[]
+// }

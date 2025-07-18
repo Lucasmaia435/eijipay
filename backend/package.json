@@ -5,7 +5,8 @@
   "scripts": {
     "build": "npx tsc",
     "start": "node dist/bin/www.js",
-    "dev": "ts-node-dev --respawn --transpile-only ./src/bin/www.ts"
+    "dev": "ts-node-dev --respawn --transpile-only ./src/bin/www.ts",
+    "seed": "ts-node prisma/seed.ts"
   },
   "keywords": [],
   "author": "",
@@ -16,7 +17,8 @@
     "@prisma/extension-accelerate": "^2.0.1",
     "bcryptjs": "^3.0.2",
     "express": "^5.1.0",
-    "jsonwebtoken": "^9.0.2"
+    "jsonwebtoken": "^9.0.2",
+    "uuid": "^11.1.0"
   },
   "devDependencies": {
     "@types/cookie-parser": "^1.4.9",

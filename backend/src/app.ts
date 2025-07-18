@@ -2,6 +2,8 @@ import express from "express";
 import usuarioRoutes from "./routes/usuarioRoutes"; // Importa as rotas de usuário
 import funcionarioRoutes from "./routes/funcionarioRoutes";
 import empregadorRoutes from "./routes/empregadorRoutes";
+import reciboPagamentoRoutes from "./routes/reciboPagamentoRoutes";
+import lotacaoRpoutes from "./routes/lotacaoRoutes"; // Importa as rotas de lotação
 import dotenv from "dotenv";
 
 dotenv.config(); // Carrega as variáveis de ambiente do arquivo .env
@@ -14,12 +16,12 @@ const app = express();
 
 // Middleware para parsear JSON no corpo das requisições
 app.use(express.json());
-
 // Rotas a serem usadas (montar roteadores)
 app.use("/users", usuarioRoutes);
 app.use("/funcionarios", funcionarioRoutes);
 app.use("/empregador", empregadorRoutes);
-
+app.use("/recibos", reciboPagamentoRoutes);
+app.use("/lotacoes", lotacaoRpoutes);
 // Rota de teste
 app.get("/", (req, res) => {
   res.send("TESTE: API de Usuários com Prisma ORM e Express!");
