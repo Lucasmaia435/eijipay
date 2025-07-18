@@ -1,5 +1,5 @@
-import 'package:frontend/core/service_locator.dart';
+import 'package:get_it/get_it.dart';
 
 abstract class Binding {
-  void dependencies(ServiceLocator locator);
+  void dependencies(GetIt locator);
 }

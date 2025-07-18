@@ -1,0 +1,18 @@
+{
+    "version": "0.1.0",
+    "configurations": [
+        {
+            "name": "Flutter Web (no CORS)",
+            "type": "dart",
+            "request": "launch",
+            "program": "lib/main.dart",
+            "args": [
+            ],
+            "toolArgs": [
+            "-d",
+            "chrome",
+            "--web-browser-flag=--disable-web-security"
+            ]
+        },  
+    ]
+}
