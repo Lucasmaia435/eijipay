@@ -1,7 +1,9 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient } from '@prisma/client/edge'
+import { withAccelerate } from '@prisma/extension-accelerate'
 import { v4 as uuidv4 } from "uuid";
 
-const prisma = new PrismaClient();
+// Instancia o Prisma Client, passando a extensão Accelerate
+const prisma = new PrismaClient().$extends(withAccelerate());
 
 export const lotacaoService = {
   async listarTodas() {

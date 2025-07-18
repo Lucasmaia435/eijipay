@@ -1,5 +1,8 @@
-import { PrismaClient } from "@prisma/client";
-const prisma = new PrismaClient();
+import { PrismaClient } from '@prisma/client/edge'
+import { withAccelerate } from '@prisma/extension-accelerate'
+
+// Instancia o Prisma Client, passando a extensão Accelerate
+const prisma = new PrismaClient().$extends(withAccelerate());
 
 export const listarFuncionarios = async () => {
   return await prisma.funcionario.findMany();

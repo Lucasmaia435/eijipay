@@ -3,7 +3,7 @@
  * Client para a entidade 'usuario'. Funções como createUser, findUserByEmail,
  * updateUser, etc., morarão aqui. É a camada responsável por manipular os dados.
  */
-import { PrismaClient } from '@prisma/client'              // Importação padrão do PrismaClient
+import { PrismaClient } from '@prisma/client/edge'
 import { withAccelerate } from '@prisma/extension-accelerate'
 import bcrypt from 'bcryptjs' // Importação do bcrypt para hash de senhas
 
