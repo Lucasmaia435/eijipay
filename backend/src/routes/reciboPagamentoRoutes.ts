@@ -1,0 +1,13 @@
+import { Router } from "express";
+import * as controller from "../controllers/reciboPagamentoController";
+import { verificarToken } from "../middlewares/authMiddleware";
+
+const router = Router();
+
+router.get("/", verificarToken, controller.getAll); // ?cnpj=...&comp=...
+router.get("/:comp", verificarToken, controller.getByFuncionario); // ?funcCpf=...&cnpj=...
+router.post("/", verificarToken, controller.create);
+router.put("/:comp", verificarToken, controller.update); // ?funcCpf=...&cnpj=...
+router.delete("/:comp", verificarToken, controller.remove); // ?funcCpf=...&cnpj=...
+
+export default router;
