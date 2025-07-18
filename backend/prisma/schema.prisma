@@ -34,3 +34,14 @@ model Funcionario {
 
   @@map("funcionario")
 }
+
+model Lotacao {
+  codigo Int     @id @default(autoincrement())
+  nome   String
+
+  // Relacionamento com FuncionarioLotacao
+  funcionarios FuncionarioLotacao[]
+
+  // Relacionamento com Usuario (controle de lotações)
+  usuarios     LotacaoUsuario[]
+}
