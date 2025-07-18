@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { lotacaoController } from "../controllers/lotacaoController";
-// import { verificarToken } from '../middlewares/authMiddleware'; // caso deseje proteger as rotas
+// import { verificarToken } from '../middlewares/authMiddleware'; // caso deseje proteger as rota
 
 const router = Router();
 
