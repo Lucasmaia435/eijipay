@@ -28,9 +28,16 @@ model Funcionario {
   nome          String
   sobrenome     String
   cargo         String
-  cpf           String   @unique @db.VarChar(11)
+  cpf           String   @unique @db.Char(11)
   data_admissao DateTime
   matricula     Int      @unique
 
   @@map("funcionario")
+}
+
+model Empregador {
+  cnpj         String @id @unique @db.Char(14)
+  razao_social String
+
+  @@map("empregador")
 }
