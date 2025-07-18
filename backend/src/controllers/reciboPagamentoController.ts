@@ -28,8 +28,9 @@ export const create = async (req: Request, res: Response) => {
       competencia,
     });
     res.status(201).json({ competencia: recibo.competencia });
-  } catch (err) {
-    res.status(400).json({ error: "Erro ao criar recibo" });
+  } catch (err: any) {
+    console.error("Erro ao criar recibo:", err);
+    res.status(400).json({ error: err.message || "Erro ao criar recibo" });
   }
 };
 

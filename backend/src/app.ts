@@ -3,7 +3,7 @@ import usuarioRoutes from "./routes/usuarioRoutes"; // Importa as rotas de usuá
 import funcionarioRoutes from "./routes/funcionarioRoutes";
 import empregadorRoutes from "./routes/empregadorRoutes";
 import dotenv from "dotenv";
-
+import reciboPagamentoRouter from "./routes/reciboPagamentoRoutes";
 dotenv.config(); // Carrega as variáveis de ambiente do arquivo .env
 
 /**
@@ -14,6 +14,8 @@ const app = express();
 
 // Middleware para parsear JSON no corpo das requisições
 app.use(express.json());
+
+app.use("/rec-pagto", reciboPagamentoRouter);
 
 // Rotas a serem usadas (montar roteadores)
 app.use("/users", usuarioRoutes);
