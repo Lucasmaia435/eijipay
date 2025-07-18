@@ -2,7 +2,7 @@ import express from "express";
 import usuarioRoutes from "./routes/usuarioRoutes"; // Importa as rotas de usuário
 import funcionarioRoutes from "./routes/funcionarioRoutes";
 import empregadorRoutes from "./routes/empregadorRoutes";
-import reciboPagamentoRouter from "./routes/reciboPagamentoRoutes";
+import reciboPagamentoRoutes from "./routes/reciboPagamentoRoutes";
 import lotacaoRpoutes from "./routes/lotacaoRoutes"; // Importa as rotas de lotação
 import dotenv from "dotenv";
 
@@ -16,14 +16,11 @@ const app = express();
 
 // Middleware para parsear JSON no corpo das requisições
 app.use(express.json());
-
-app.use("/rec-pagto", reciboPagamentoRouter);
-
 // Rotas a serem usadas (montar roteadores)
 app.use("/users", usuarioRoutes);
 app.use("/funcionarios", funcionarioRoutes);
 app.use("/empregador", empregadorRoutes);
-
+app.use("/recibos", reciboPagamentoRoutes);
 app.use("/lotacoes", lotacaoRpoutes);
 // Rota de teste
 app.get("/", (req, res) => {
