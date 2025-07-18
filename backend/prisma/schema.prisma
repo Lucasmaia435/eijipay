@@ -3,8 +3,8 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider = "sqlite"
+  url      = "file:./dev.db"
 }
 
 model Usuario {
@@ -30,7 +30,7 @@ model Funcionario {
   nome           String
   sobrenome      String
   cargo          String
-  cpf            String            @unique @db.Char(11)
+  cpf            String            @unique
   data_admissao  DateTime
   matricula      Int               @unique
   empregadorCnpj String            @map("empregador_cnpj")
@@ -80,7 +80,7 @@ model ItemRecibo {
 }
 
 model Empregador {
-  cnpj            String            @id @unique @db.Char(14)
+  cnpj            String            @id @unique
   razao_social    String
   funcionarios    Funcionario[]
   recibosEmitidos ReciboPagamento[]

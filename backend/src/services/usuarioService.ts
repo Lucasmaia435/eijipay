@@ -3,12 +3,14 @@
  * Client para a entidade 'usuario'. Funções como createUser, findUserByEmail,
  * updateUser, etc., morarão aqui. É a camada responsável por manipular os dados.
  */
-import { PrismaClient } from '@prisma/client/edge'
-import { withAccelerate } from '@prisma/extension-accelerate'
 import bcrypt from 'bcryptjs' // Importação do bcrypt para hash de senhas
+import { PrismaBetterSQLite3 } from '@prisma/adapter-better-sqlite3';
+import { PrismaClient } from '@prisma/client';
 
-// Instancia o Prisma Client, passando a extensão Accelerate
-const prisma = new PrismaClient().$extends(withAccelerate());
+const adapter = new PrismaBetterSQLite3({
+  url: "file:./prisma/dev.db"
+});
+const prisma = new PrismaClient();
 
 export const usuarioService = {
 

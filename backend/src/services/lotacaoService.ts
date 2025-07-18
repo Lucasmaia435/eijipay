@@ -1,9 +1,11 @@
-import { PrismaClient } from '@prisma/client/edge'
-import { withAccelerate } from '@prisma/extension-accelerate'
 import { v4 as uuidv4 } from "uuid";
+import { PrismaBetterSQLite3 } from '@prisma/adapter-better-sqlite3';
+import { PrismaClient } from '@prisma/client';
 
-// Instancia o Prisma Client, passando a extensão Accelerate
-const prisma = new PrismaClient().$extends(withAccelerate());
+const adapter = new PrismaBetterSQLite3({
+  url: "file:./prisma/dev.db"
+});
+const prisma = new PrismaClient();
 
 export const lotacaoService = {
   async listarTodas() {
