@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -24,97 +18,72 @@ model Usuario {
 }
 
 model Lotacao {
-  codigo String @id @unique
-  nome   String
-
+  codigo       String        @id @unique
+  nome         String
   funcionarios Funcionario[]
 
   @@map("lotacoes")
 }
 
 model Funcionario {
-  id            Int      @id @default(autoincrement())
-  nome          String
-  sobrenome     String
-  cargo         String
-  cpf           String   @unique @db.Char(11)
-  data_admissao DateTime
-  matricula     Int      @unique
-
-  empregador     Empregador @relation(fields: [empregadorCnpj], references: [cnpj])
-  empregadorCnpj String     @map("empregador_cnpj")
-
-  lotacao       Lotacao @relation(fields: [lotacaoCodigo], references: [codigo])
-  lotacaoCodigo String  @map("lotacao_codigo")
-
-  recibos ReciboPagamento[]
+  id             Int               @id @default(autoincrement())
+  nome           String
+  sobrenome      String
+  cargo          String
+  cpf            String            @unique @db.Char(11)
+  data_admissao  DateTime
+  matricula      Int               @unique
+  empregadorCnpj String            @map("empregador_cnpj")
+  lotacaoCodigo  String            @map("lotacao_codigo")
+  empregador     Empregador        @relation(fields: [empregadorCnpj], references: [cnpj])
+  lotacao        Lotacao           @relation(fields: [lotacaoCodigo], references: [codigo])
+  recibos        ReciboPagamento[]
 
   @@map("funcionario")
 }
 
 model ReciboPagamento {
-  funcionarioCpf String      @map("funcionario_cpf")
-  funcionario    Funcionario @relation(fields: [funcionarioCpf], references: [cpf])
+  funcionarioCpf String       @map("funcionario_cpf")
+  empregadorCnpj String       @map("empregador_cnpj")
+  competencia    String
+  itens          ItemRecibo[]
+  empregador     Empregador   @relation(fields: [empregadorCnpj], references: [cnpj])
+  funcionario    Funcionario  @relation(fields: [funcionarioCpf], references: [cpf])
 
-  empregadorCnpj String     @map("empregador_cnpj")
-  empregador     Empregador @relation(fields: [empregadorCnpj], references: [cnpj])
-
-  competencia String // Ex: "2025-07"
-
-  itens ItemRecibo[]
-
-  // Define uma chave primária composta
   @@id([funcionarioCpf, empregadorCnpj, competencia])
   @@map("recibos_pagamento")
 }
 
 model Verba {
-  codigo    String @id @unique
-  descricao String
-
-  itensRecibo ItemRecibo[]
-
-  referenciaPai       Verba?  @relation("ReferenciasVerba", fields: [referenciaPaiCodigo], references: [codigo])
-  referenciaPaiCodigo String? @map("referencia_pai_codigo")
-  referenciasFilhas   Verba[] @relation("ReferenciasVerba")
+  codigo              String       @id @unique
+  descricao           String
+  referenciaPaiCodigo String?      @map("referencia_pai_codigo")
+  itensRecibo         ItemRecibo[]
+  referenciaPai       Verba?       @relation("ReferenciasVerba", fields: [referenciaPaiCodigo], references: [codigo])
+  referenciasFilhas   Verba[]      @relation("ReferenciasVerba")
 
   @@map("verbas")
 }
 
 model ItemRecibo {
-  reciboFuncionarioCpf String @map("recibo_funcionario_cpf")
-  reciboEmpregadorCnpj String @map("recibo_empregador_cnpj")
-  reciboCompetencia    String @map("recibo_competencia")
-
-  recibo ReciboPagamento @relation(fields: [reciboFuncionarioCpf, reciboEmpregadorCnpj, reciboCompetencia], references: [funcionarioCpf, empregadorCnpj, competencia], onDelete: Cascade)
-
-  verbaCodigo String @map("verba_codigo")
-  verba       Verba  @relation(fields: [verbaCodigo], references: [codigo])
-
-  valorProvento Decimal? @map("valor_provento")
-  valorDesconto Decimal? @map("valor_desconto")
+  reciboFuncionarioCpf String          @map("recibo_funcionario_cpf")
+  reciboEmpregadorCnpj String          @map("recibo_empregador_cnpj")
+  reciboCompetencia    String          @map("recibo_competencia")
+  verbaCodigo          String          @map("verba_codigo")
+  valorProvento        Decimal?        @map("valor_provento")
+  valorDesconto        Decimal?        @map("valor_desconto")
+  recibo               ReciboPagamento @relation(fields: [reciboFuncionarioCpf, reciboEmpregadorCnpj, reciboCompetencia], references: [funcionarioCpf, empregadorCnpj, competencia], onDelete: Cascade)
+  verba                Verba           @relation(fields: [verbaCodigo], references: [codigo])
 
   @@id([reciboFuncionarioCpf, reciboEmpregadorCnpj, reciboCompetencia, verbaCodigo])
   @@map("itens_recibo")
 }
 
 model Empregador {
-  cnpj         String @id @unique @db.Char(14)
-  razao_social String
-
+  cnpj            String            @id @unique @db.Char(14)
+  razao_social    String
   funcionarios    Funcionario[]
   recibosEmitidos ReciboPagamento[]
 
   @@map("empregador")
 }
-
-// model Lotacao {
-//   codigo Int     @id @default(autoincrement())
-//   nome   String
-
-//   // Relacionamento com FuncionarioLotacao
-//   funcionarios FuncionarioLotacao[]
-
-//   // Relacionamento com Usuario (controle de lotações)
-//   usuarios     LotacaoUsuario[]
-// }

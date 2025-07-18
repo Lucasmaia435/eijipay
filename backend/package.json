@@ -12,8 +12,8 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "@prisma/client": "^6.11.0",
-    "@prisma/extension-accelerate": "^2.0.1",
+    "@prisma/client": "^6.12.0",
+    "@prisma/extension-accelerate": "^2.0.2",
     "bcryptjs": "^3.0.2",
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.2",
@@ -28,7 +28,7 @@
     "@types/morgan": "^1.9.10",
     "@types/node": "^24.0.8",
     "dotenv": "^17.0.0",
-    "prisma": "^6.11.0",
+    "prisma": "^6.12.0",
     "ts-node": "^10.9.2",
     "ts-node-dev": "^2.0.0",
     "typescript": "^5.8.3"
